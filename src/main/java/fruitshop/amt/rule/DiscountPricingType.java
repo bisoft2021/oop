@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * 折扣+单价定价
+ * 折扣定价
  */
 @Data
 public class DiscountPricingType extends UnitPricePricingType {
@@ -31,7 +31,7 @@ public class DiscountPricingType extends UnitPricePricingType {
         Date expireTime = price.getExpireTime();
 
         if (DateUtil.inRange(effectTime, expireTime)
-                && discountRate > FREE_DISCOUNT // 不能打满折
+                && discountRate > FREE_DISCOUNT // 不允许免费
                 && discountRate <= NO_DISCOUNT // 不打折
         ) {
             return true;
