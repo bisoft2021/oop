@@ -55,7 +55,7 @@ public class OrderService implements Service {
 
         for (OrderRecord item : order.getRecords()) {
             String productTypeKey = item.getKey();
-            List<Price> priceList = priceService.get(productTypeKey);
+            List<Price> priceList = (List<Price>) priceService.get(productTypeKey);
             for (Price price : priceList) {
                 int ruleType = price.getFlags() & 0xFFFF;
                 if (ruleType == RULE_TYPE_UNIT_COUPON) {
@@ -81,9 +81,7 @@ public class OrderService implements Service {
                 BigDecimal unitPrice = pricing.computeAmount(price);
                 sum = sum.subtract(unitPrice);
 
-                if ((price.getFlags() & RULE_SAME_MODE_EXCLUSION) == 1) {
-                    break;
-                }
+                break;
             }
         }
         return sum;

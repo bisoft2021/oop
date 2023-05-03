@@ -11,7 +11,7 @@ public class PriceService implements Service {
         KeyedItemRepo.getInstance().save("PRICE", price);
     }
 
-    public List<Price> get(String chargingRuleKey) {
-        return (List) KeyedItemRepo.getInstance().findList("PRICE", chargingRuleKey);
+    public List<?> get(String chargingRuleKey) {
+        return KeyedItemRepo.getInstance().findList("PRICE", chargingRuleKey);
     }
 }

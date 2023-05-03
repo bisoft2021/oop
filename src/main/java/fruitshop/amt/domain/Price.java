@@ -6,10 +6,12 @@ import fruitshop.amt.rule.DiscountPricingType;
 import fruitshop.amt.rule.UnitPricePricingType;
 import fruitshop.comm.KeyedItem;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class Price extends KeyedItem {
     // flag
@@ -20,7 +22,7 @@ public class Price extends KeyedItem {
     // bit 24    不同规则 是否允许多个
     // bit 25-27 限时类型
     // bit 28    是否满额兑换
-    // bit 29-30 优先级
+    // bit 29-31 优先级
     public static final int RULE_TYPE_UNIT_PRICE = 0;
     public static final int RULE_TYPE_UNIT_DISCOUNT = 1;
     public static final int RULE_TYPE_UNIT_COUPON = 2;
@@ -31,12 +33,12 @@ public class Price extends KeyedItem {
     public static final int REF_TYPE_ORDER_TYPE = 1 << 18;
     public static final int REF_TYPE_ORDER = 1 << 19;
     public static final int RULE_APPLY_SUMMERY_RECORD = 1 << 20;
-    public static final int RULE_APPLY_SUMMARY_ALL = 1 << 22;
+    public static final int RULE_APPLY_SUMMARY_ALL = 1 << 21;
     public static final int FULL_DEDUCT = 1 << 28;
     public static final int PRIORITY_1 = 0;
     public static final int PRIORITY_2 = 1 << 29;
-    public static final int PRIORITY_3 = 2 << 28;
-    public static final int PRIORITY_4 = 3 << 28;
+    public static final int PRIORITY_3 = 1 << 30;
+    public static final int PRIORITY_4 = 1 << 31;
 
     private String refKey;
     private int flags;
@@ -48,20 +50,8 @@ public class Price extends KeyedItem {
     private BigDecimal metDeductAmount;
     private BigDecimal orderTotalAmount; // 订单总金额
 
-    public static Price create(String pricingRuleKey, BigDecimal unitPrice, int discountRate, Date effectTime, BigDecimal deductAmount, BigDecimal metDeductAmount) {
-        Price price = new Price();
-        price.setKey(pricingRuleKey);
-        price.setUnitPrice(unitPrice);
-        price.setDiscountRate(discountRate);
-        price.setDeductAmount(deductAmount);
-        price.setMetDeductAmount(metDeductAmount);
-        price.setEffectTime(new Date());
-        price.setExpireTime(effectTime); // DateUtil.getDateOffset(1000 * 60 * 60 * 12)
-        return price;
-    }
-
     public static PricingType getPricingRule(int ruleType) {
-        PricingType pricingType = null;
+        PricingType pricingType;
         switch (ruleType) {
             case 1:
                 pricingType = new DiscountPricingType();
@@ -84,7 +74,7 @@ public class Price extends KeyedItem {
         price.setUnitPrice(unitPrice);
         price.setDiscountRate(discountRate);
         price.setEffectTime(effectTime);
-        price.setExpireTime(expireTime); // DateUtil.getDateOffset(1000 * 60 * 60 * 12)
+        price.setExpireTime(expireTime);
         return price;
     }
 
@@ -96,7 +86,7 @@ public class Price extends KeyedItem {
         price.setDeductAmount(deductAmount);
         price.setMetDeductAmount(metDeductAmount);
         price.setEffectTime(effectTime);
-        price.setExpireTime(expireTime); // DateUtil.getDateOffset(1000 * 60 * 60 * 12)
+        price.setExpireTime(expireTime);
         return price;
     }
 
@@ -107,10 +97,6 @@ public class Price extends KeyedItem {
         price.setRefKey(refKey);
         price.setUnitPrice(unitPrice);
         return price;
-    }
-
-    public void put(BigDecimal orderTotalAmount) {
-        setOrderTotalAmount(orderTotalAmount);
     }
 
 }
